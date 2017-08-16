@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--定义被引用包的根目录，里面是动作-->
+<!--test.get-->
+<mapper namespace="com.edusoft.dao.IGoodsDao">
+    <sql id="fields">
+         id, name, image, originalPrice, rate, discountPrice,
+         sellerId, categoryId, stock,state
+
+    </sql>
+
+    <sql id="tablename">
+        goods
+    </sql>
+
+    <resultMap id="baseMap" type="Goods">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="image" property="image"/>
+        <result column="originalPrice" property="originalPrice"/>
+        <result column="rate" property="rate"/>
+        <result column="discountPrice" property="discountPrice"/>
+        <result column="stock" property="stock"/>
+        <result column="state" property="state"/>
+        <association property="category" javaType="Category" column="categoryId"
+        select="com.edusoft.dao.ICategoryDao.get"/>
+        <association property="seller" javaType="Seller" column="sellerId"
+        select="com.edusoft.dao.ISellerDao.get"/>
+
+
+    </resultMap>
+
+    <select id="get" parameterType="java.lang.String" resultMap="baseMap">
+        SELECT
+        <include refid="fields"/>
+        FROM
+        <include refid="tablename"/>
+        WHERE
+        id=#{id}/*代替？*/
+    </select>
+
+    <select id="getAll" parameterType="java.lang.String" resultMap="baseMap">
+        SELECT
+        <include refid="fields"/>
+        FROM
+        <include refid="tablename"/>
+        WHERE
+        username LIKE concat(concat('%',#{queryValue}),'%')
+    </select>
+
+    <delete id="delete" parameterType="java.lang.String">
+        DELETE
+        FROM
+        <include refid="tablename"></include>
+        WHERE
+        id=#{id}
+    </delete>
+
+    <insert id="insert" parameterType="goods">
+        INSERT INTO
+        <include refid="tablename"/>
+        /*suffixoverrides 去掉末尾的，*/
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sellerID!=null" >
+                sellerID,
+            </if>
+            <if test="categoryID!=null" >
+                categoryID,
+            </if>
+            <if test="name!=null" >
+                name,
+            </if>
+            <if test="image!=null" >
+                image,
+            </if>
+            <if test="originalPrice!=null" >
+                originalPrice,
+            </if>
+            <if test="rate!=null" >
+                rate,
+            </if>
+            <if test="stock!=null" >
+                stock,
+            </if>
+            <if test="state!=null" >
+                state
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="sellerID!=null" >
+                #{seller.id()},
+            </if>
+            <if test="categoryID!=null" >
+                #{category.id()},
+            </if>
+            <if test="name!=null" >
+                #{name},
+            </if>
+            <if test="image!=null" >
+                #{image},
+            </if>
+            <if test="originalPrice!=null" >
+                #{originalPrice},
+            </if>
+            <if test="rate!=null" >
+                #{rate},
+            </if>
+            <if test="stock!=null" >
+                #{stock},
+            </if>
+            <if test="state!=null" >
+                #{state}
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="Seller">
+        UPDATE
+        <include refid="tablename"/>
+        SET
+        <trim suffixOverrides=",">
+            <if test="realname!=null" >
+                realname=#{realname},
+            </if>
+            <if test="username!=null" >
+                username=#{username},
+            </if>
+            <if test="password!=null" >
+                password=#{password},
+            </if>
+            <if test="address!=null" >
+                address=#{address},
+            </if>
+            <if test="postcode!=null" >
+                postcode=#{postcode},
+            </if>
+            <if test="email!=null" >
+                email=#{email},
+            </if>
+            <if test="url!=null" >
+                url=#{url},
+            </if>
+            <if test="phone!=null" >
+                phone=#{phone},
+            </if>
+            <if test="logo!=null" >
+                logo=#{logo},
+            </if>
+            <if test="regDate!=null" >
+                regDate=#{regDate},
+            </if>
+            <if test="state!=null">
+                state=#{state},
+            </if>
+            <if test="grade!=null" >
+                grade=#{grade},
+            </if>
+        </trim>
+        where
+        id=#{id}
+    </update>
+</mapper>

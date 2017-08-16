@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--定义被引用包的根目录，里面是动作-->
+<!--test.get-->
+<mapper namespace="com.edusoft.dao.ISellerDao">
+    <sql id="fields">
+         id, realname, username, password, address, postcode, email, url, phone, logo, regDate, state, grade
+    </sql>
+
+    <sql id="tablename">
+        seller
+    </sql>
+
+    <resultMap id="baseMap" type="Seller">
+        <result column="id" property="id"/>
+        <result column="realname" property="realname"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="address" property="address"/>
+        <result column="postcode" property="postcode"/>
+        <result column="email" property="email"/>
+        <result column="url" property="url"/>
+        <result column="phone" property="phone"/>
+        <result column="logo" property="logo"/>
+        <result column="regData" property="regData"/>
+        <result column="state" property="state"/>
+        <result column="grade" property="grade"/>
+    </resultMap>
+
+    <select id="get" parameterType="java.lang.String" resultMap="baseMap">
+        SELECT
+        <include refid="fields"/>
+        FROM
+        <include refid="tablename"/>
+        WHERE
+        id=#{id}/*代替？*/
+    </select>
+
+    <select id="getAll" parameterType="java.lang.String" resultMap="baseMap">
+        SELECT
+        <include refid="fields"/>
+        FROM
+        <include refid="tablename"/>
+        WHERE
+        username LIKE concat(concat('%',#{queryValue}),'%')
+    </select>
+
+    <delete id="delete" parameterType="java.lang.String">
+        DELETE
+        FROM
+        <include refid="tablename"></include>
+        WHERE
+        id=#{id}
+    </delete>
+
+    <insert id="insert" parameterType="Seller">
+        INSERT INTO
+        <include refid="tablename"/>
+        /*suffixoverrides 去掉末尾的，*/
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="realname!=null" >
+                realname,
+            </if>
+            <if test="username!=null" >
+                username,
+            </if>
+            <if test="password!=null" >
+                password,
+            </if>
+            <if test="address!=null" >
+                address,
+            </if>
+            <if test="postcode!=null" >
+                postcode ,
+            </if>
+            <if test="email!=null" >
+                email,
+            </if>
+            <if test="url!=null" >
+                url,
+            </if>
+            <if test="phone!=null" >
+                phone,
+            </if>
+            <if test="logo!=null" >
+                logo,
+            </if>
+            <if test="regDate!=null" >
+                regDate,
+            </if>
+            <if test="state!=null">
+                state,
+            </if>
+            <if test="grade!=null" >
+                grade,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="realname!=null" >
+                #{realname},
+            </if>
+            <if test="username!=null" >
+                #{username},
+            </if>
+            <if test="password!=null" >
+                #{password},
+            </if>
+            <if test="address!=null" >
+                #{address},
+            </if>
+            <if test="postcode!=null" >
+                #{postcode},
+            </if>
+            <if test="email!=null" >
+                #{email},
+            </if>
+            <if test="url!=null" >
+                #{url},
+            </if>
+            <if test="phone!=null" >
+                #{phone},
+            </if>
+            <if test="logo!=null" >
+                #{logo},
+            </if>
+            <if test="regDate!=null" >
+                #{regDate},
+            </if>
+            <if test="state!=null">
+                #{state},
+            </if>
+            <if test="grade!=null" >
+                #{grade},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="Seller">
+        UPDATE
+        <include refid="tablename"/>
+        SET
+        <trim suffixOverrides=",">
+            <if test="realname!=null" >
+                realname=#{realname},
+            </if>
+            <if test="username!=null" >
+                username=#{username},
+            </if>
+            <if test="password!=null" >
+                password=#{password},
+            </if>
+            <if test="address!=null" >
+                address=#{address},
+            </if>
+            <if test="postcode!=null" >
+                postcode=#{postcode},
+            </if>
+            <if test="email!=null" >
+                email=#{email},
+            </if>
+            <if test="url!=null" >
+                url=#{url},
+            </if>
+            <if test="phone!=null" >
+                phone=#{phone},
+            </if>
+            <if test="logo!=null" >
+                logo=#{logo},
+            </if>
+            <if test="regDate!=null" >
+                regDate=#{regDate},
+            </if>
+            <if test="state!=null">
+                state=#{state},
+            </if>
+            <if test="grade!=null" >
+                grade=#{grade},
+            </if>
+        </trim>
+        where
+        id=#{id}
+    </update>
+</mapper>

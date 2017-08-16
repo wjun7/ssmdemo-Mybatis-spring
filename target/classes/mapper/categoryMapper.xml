@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--定义被引用包的根目录，里面是动作-->
+<!--test.get-->
+<mapper namespace="com.edusoft.dao.ICategoryDao">
+    <sql id="fields">
+        id, text, parent
+    </sql>
+
+    <sql id="tablename">
+        category
+    </sql>
+
+    <resultMap id="baseMap" type="Category">
+        <result column="id" property="id"/>
+        <result column="text" property="text"/>
+        <result column="parent" property="parent"/>
+    </resultMap>
+
+    <select id="get" parameterType="java.lang.String" resultMap="baseMap">
+        SELECT
+        <include refid="fields"/>
+        FROM
+        <include refid="tablename"/>
+        WHERE
+        id=#{id}/*代替？*/
+    </select>
+
+    <select id="getAll" parameterType="java.lang.String" resultMap="baseMap">
+        SELECT
+        <include refid="fields"/>
+        FROM
+        <include refid="tablename"/>
+        WHERE
+        text LIKE concat(concat('%',#{queryValue}),'%')
+    </select>
+
+    <delete id="delete" parameterType="java.lang.String">
+        DELETE
+        FROM
+        <include refid="tablename"></include>
+        WHERE
+        id=#{id}
+    </delete>
+
+    <insert id="insert" parameterType="Category">
+        INSERT INTO
+        <include refid="tablename"/>
+        /*suffixoverrides 去掉末尾的，*/
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="text!=null">
+                text,
+            </if>
+            <if test="parent!=null" >
+                parent,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="text!=null">
+                #{text},
+            </if>
+            <if test="parent!=null" >
+                #{parent},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="Category">
+        UPDATE
+        <include refid="tablename"/>
+        SET
+        <trim suffixOverrides=",">
+            <if test="text!=null">
+                text=#{text},
+            </if>
+            <if test="parent!=null" >
+                parent=#{parent},
+            </if>
+        </trim>
+        where
+        id=#{id}
+    </update>
+</mapper>
